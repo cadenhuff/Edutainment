@@ -6,79 +6,80 @@
 //
 
 import SwiftUI
-struct settingsView: View{
-    @State private var table = 2
-    @State private var numOfTurns = 5
-    var body: some View{
-        NavigationView{
-            VStack {
-                Spacer()
-                Stepper("\(table) times table", value: $table, in: 2...12, step: 1)
-                Spacer()
-                
-                HStack{
-                    Button("5"){numOfTurns = 5}
-                    Button("10"){numOfTurns = 10}
-                    Button("20"){numOfTurns = 20}
-                }
-                Spacer()
-                Spacer()
-                Button("Start!"){}
-            }
-            .padding()
-        }
-    }
-    
-    
-}
 
-struct Question{
-    var question:String
-    var answer:Int
-    
-    
-}
+
 struct ContentView: View {
-    @State private var table = 5
-    @State private var numOfTurns = 5
-    @State private var gameStart = false
-    var questions: [Question]{
-        var questionsArray = [Question]()
-
-        for _ in 1...numOfTurns{
-            var x = Int.random(in: 2...table)
-            var y = Int.random(in: 0...12)
-            questionsArray.append(Question(question: "\(x) * \(y) = ?", answer: x*y ))
+    struct Question{
+        var x: Int
+        var y: Int
+        var xy: Int
+        
+        init(x: Int, y: Int) {
+            self.x = x
+            self.y = y
+            self.xy = x*y
         }
-        return questionsArray
+        
     }
+    @State private var test = "awdf"
+    @State private var table =  5
+    @State private var numOfTurns = 5
+    @State private var questions = [Question]()
+    @State private var gameRunning = false
+    @State private var score = 0
     var body: some View {
-        if gameStart == false{
+        if gameRunning == false{
             NavigationView{
                 VStack {
-
-                    Text(questions[1].answer.formatted())
-                    Spacer()
                     Stepper("Up to \(table) times table", value: $table, in: 2...12, step: 1)
                     Spacer()
                     
                     HStack{
                         Button("5"){numOfTurns = 5}
+                            .font(numOfTurns == 5 ? .title : .body)
                         Button("10"){numOfTurns = 10}
+                            .font(numOfTurns == 10 ? .title : .body)
                         Button("20"){numOfTurns = 20}
+                            .font(numOfTurns == 20 ? .title : .body)
+                            
                       
                     }
                     Spacer()
                     Spacer()
-                    Button("Start!"){}
+                    Button("Start!"){
+                        startGame(turns: numOfTurns)
+                    }
+                    
 
                 }
                 .padding()
             }
         }
-        if gameStart == true{
-            Text("hey")
+        else{
+            NavigationView{
+                VStack{
+                    Text("hello")
+                    
+                    Button("go back"){gameRunning = false}
+                    
+                    TextField("amount", text: $test)
+                }
+            }
         }
+
+        
+    }
+    
+    func startGame(turns:Int){
+        
+        for _ in 1...turns{
+            let question = Question(x: Int.random(in: 1...table), y: Int.random(in:1...table))
+            questions.append(question)
+        }
+        gameRunning = true
+    }
+    func pickQuestion(){
+        print("hi")
     }
     
     
